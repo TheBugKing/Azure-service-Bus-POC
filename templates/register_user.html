@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Registration{% endblock %}
+
+{% block content %}
+    <div class="form-registration">
+        <h2 class="text-center">Register</h2>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <label for="{{ form.name.id }}">{{ form.name.label }}</label>
+                {{ form.name(class="form-control") }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.email.id }}">{{ form.email.label }}</label>
+                {{ form.email(class="form-control") }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password.id }}">{{ form.password.label }}</label>
+                {{ form.password(class="form-control") }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.confirm_password.id }}">{{ form.confirm_password.label }}</label>
+                {{ form.confirm_password(class="form-control") }}
+                {% if form.confirm_password.errors and form.is_submitted() %}
+                    <div class="error-message">{{ form.confirm_password.errors[0]}}</div>
+                {% endif %}
+            </div>
+            <div class="d-flex justify-content-center">
+                {{ form.submit(class="btn-submit-red") }}
+            </div>
+            <br>
+            <div class="text-center">
+                <a href="{{ url_for('register_bp.register_user') }}"><h6 class="text-center">Refresh Page</h6></a>
+                <a href="{{url_for('login_bp.login')}}">already registered? click here to login</a>
+            </div>
+        </form>
+        <br>
+        <div class="container">
+           {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="flash-messages">
+                  {% for message in messages %}
+                    <div class="alert">
+                        <h6>{{ message }}</h6>
+                    </div>
+                  {% endfor %}
+                </div>
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+{% endblock %}
