@@ -2,7 +2,7 @@ from sqlalchemy import func
 from flask_login import UserMixin
 
 from extention import db
-from . import TopicSubscriptionModel
+from models import TopicSubscription
 
 
 class User(db.Model, UserMixin):
@@ -14,20 +14,29 @@ class User(db.Model, UserMixin):
 
     subscribed_topics = db.Column(db.String)  # Store topic names as a comma-separated string
 
-    # topic_subscriptions = db.relationship(
-    #     'TopicSubscription',
-    #     back_populates='user',
-    #     cascade='all, delete-orphan'
-    # )
+    topic_subscriptions = db.relationship(
+        'TopicSubscription',
+        back_populates='user',
+        cascade='all, delete-orphan'
+    )
 
     def subscribe_to_topic(self, topic_name):
         topics = self.subscribed_topics.split(',') if self.subscribed_topics else []
         if topic_name not in topics:
             topics.append(topic_name)
             self.subscribed_topics = ','.join(topics)
+            db.session.commit()
 
     def unsubscribe_from_topic(self, topic_name):
         topics = self.subscribed_topics.split(',') if self.subscribed_topics else []
         if topic_name in topics:
             topics.remove(topic_name)
             self.subscribed_topics = ','.join(topics)
+
+            subscription = TopicSubscription.query.filter_by(
+                user_id=self.id,
+                topic=topic_name
+            ).first()
+            if subscription:
+                db.session.delete(subscription)
+            db.session.commit()

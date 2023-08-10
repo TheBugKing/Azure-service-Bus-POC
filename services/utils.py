@@ -1,7 +1,9 @@
 import json
+from collections import namedtuple
 
 from flask_login import current_user
 
+from models.TopicSubscriptionModel import TopicSubscription
 from models.UserModel import User
 from settings import TOPIC_FILE_PATH
 
@@ -33,3 +35,9 @@ def get_user_data(user_id):
             'topics': topics
             }
     return data
+
+
+def get_subscribed__topic_users(topic_name):
+    subscribed_users = User.query.join(TopicSubscription).filter(TopicSubscription.topic == topic_name).all()
+    name_user_details_tuple = namedtuple('user', ['name', 'email'])
+    return [name_user_details_tuple(user.name, user.email) for user in subscribed_users]

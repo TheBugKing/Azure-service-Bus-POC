@@ -9,16 +9,10 @@ class TopicSubscription(db.Model):
     user = db.relationship('User', back_populates='topic_subscriptions')
 
     @classmethod
-    def remove_subscription(cls, user, topic):
-        subscription = cls.query.filter_by(user_id=user.id, topic_id=topic.id).first()
-        if subscription:
-            db.session.delete(subscription)
+    def add_topic(cls, user, topic):
+        existing_subscription = cls.query.filter_by(user_id=user.id, topic=topic).first()
+        if not existing_subscription:
+            new_subscription = cls(user=user, topic=topic)
+            db.session.add(new_subscription)
             db.session.commit()
 
-    @classmethod
-    def get_subscriptions_by_user(cls, user):
-        return cls.query.filter_by(user_id=user.id).all()
-
-    @classmethod
-    def get_subscriptions_by_topic(cls, topic):
-        return cls.query.filter_by(topic_id=topic.id).all()

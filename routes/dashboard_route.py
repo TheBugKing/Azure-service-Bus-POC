@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import current_user, login_required
 
 from extention import db
+from models import User
+from models.TopicSubscriptionModel import TopicSubscription
 from services import utils
 
 dashboard_bp = Blueprint('dashboard_bp', __name__)
@@ -22,7 +24,7 @@ def subscribe_topics():
     data = request.form.getlist('subscribe_topics[]')
     for topic in data:
         current_user.subscribe_to_topic(topic_name=topic)
-    db.session.commit()
+        TopicSubscription.add_topic(user=current_user, topic=topic)
     return redirect(url_for('dashboard_bp.dashboard_home'))
 
 
@@ -31,9 +33,17 @@ def subscribe_topics():
 def unsubscribe_topics():
     print("here")
     data = request.form.getlist('subscribed_topics[]')
-    print(data)
     for topic in data:
-        print(topic)
         current_user.unsubscribe_from_topic(topic_name=topic)
-    db.session.commit()
     return redirect(url_for('dashboard_bp.dashboard_home'))
+
+
+@dashboard_bp.route('/del', methods=['GET'])
+def del_user():
+    user_to_delete = User.query.get(current_user.id)
+    if user_to_delete:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+    else:
+        print("User not found")
+    return '<h1>user deleted</h1>'

@@ -31,6 +31,7 @@ def login():
                     return redirect(url_for('dashboard_bp.dashboard_home'))
                 else:
                     flash("email or password incorrect")
+    print("login page")
     return render_template('login.html', form=form)
 
 
