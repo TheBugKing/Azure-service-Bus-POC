@@ -37,13 +37,3 @@ def unsubscribe_topics():
         current_user.unsubscribe_from_topic(topic_name=topic)
     return redirect(url_for('dashboard_bp.dashboard_home'))
 
-
-@dashboard_bp.route('/del', methods=['GET'])
-def del_user():
-    user_to_delete = User.query.get(current_user.id)
-    if user_to_delete:
-        db.session.delete(user_to_delete)
-        db.session.commit()
-    else:
-        print("User not found")
-    return '<h1>user deleted</h1>'
