@@ -13,12 +13,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the content of the local src directory to the working directory
 COPY . .
 
-# Expose the port your Flask app runs on
-EXPOSE 5000
+# Expose port 80 for incoming HTTP traffic
+EXPOSE 80
 
-# Define environment variables
+# Set environment variables
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
+ENV FLASK_RUN_PORT=80
 
-# Run the command to start your Flask app
-CMD ["flask", "run"]
+# Command to start Gunicorn with your app
+CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:app"]
