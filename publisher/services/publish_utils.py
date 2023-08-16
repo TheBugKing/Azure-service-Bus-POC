@@ -10,7 +10,7 @@ def publish_to_azure_service_bus_topic(topic_name, data):
 
     Args:
         topic_name (str): Name of the topic to publish to.
-        data (dict): Data to be published.
+        data (str): Data to be published.
 
     Returns:
         None

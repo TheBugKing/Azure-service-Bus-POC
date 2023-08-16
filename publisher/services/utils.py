@@ -105,7 +105,7 @@ def format_publish_data(data, topic_name):
     Format data to be published to a topic.
 
     Args:
-        data (dict): Data to be published.
+        data (str): Data to be published.
         topic_name (str): Name of the topic.
 
     Returns:

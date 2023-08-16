@@ -2,7 +2,7 @@ from flask import url_for, redirect, render_template, flash
 from flask import Blueprint
 from flask_login import current_user, login_required
 
-from services import utils, publsih_utils
+from services import utils, publish_utils
 from forms.publish_form import PublishForm
 from log.log import logger
 
@@ -45,7 +45,7 @@ def publish_article():
         if form.validate_on_submit():
             post = form.post.data
             topic = form.topic.data
-            publsih_utils.publish_to_azure_service_bus_topic(topic_name=topic, data=post)
+            publish_utils.publish_to_azure_service_bus_topic(topic_name=topic, data=post)
             form.post.data = ''
             form.topic.data = ''
             flash("Published successfully.")
